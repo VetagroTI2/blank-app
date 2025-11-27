@@ -12,10 +12,19 @@ import branca.colormap as cm
 arquivo = "denuncias_vigilancia_sanitaria_fortaleza_bigdata.csv"
 df = pd.read_csv(arquivo, encoding="latin1", sep=";")
 
-# Garantir colunas em letras minúsculas (padronização)
+st.set_page_config(page_title="Dashboard de Denúncias", layout="wide")
+
+# -------------------------
+# Tratativa e limpeza de dados base de dados
+# -------------------------
+
+#Tirar as linhas vazias
+df.dropna(inplace=True)
+#Tirar as linhas duplicadas
+df.drop_duplicates(inplace=True)
+#colocar o nome das colunas em minusculo
 df.columns = [c.lower() for c in df.columns]
 
-st.set_page_config(page_title="Dashboard de Denúncias", layout="wide")
 
 # -------------------------
 # Menu lateral
@@ -184,18 +193,7 @@ elif menu == "♻️ Reincidência de Denúncias":
             title="Heatmap de Reincidência de Denúncias por Bairro ao Longo do Tempo"
         )
         st.plotly_chart(fig, use_container_width=True)
-
-        # Também um gráfico de barras empilhadas
-        fig2 = px.bar(
-            reincidencia,
-            x="ano_mes",
-            y="Quantidade",
-            color="bairro",
-            title="Denúncias por Bairro ao Longo do Tempo (Reincidência)",
-            labels={"ano_mes": "Período", "Quantidade": "Nº de Denúncias"}
-        )
-        st.plotly_chart(fig2, use_container_width=True)
-
+        
         st.markdown("### 📌 Análise")
         st.write(
             "A reincidência é medida pelo número de vezes em que um bairro aparece com novas denúncias em meses diferentes. "
